@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title=${request.requestCode})}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+            <div>
+                <div class="d-flex align-items-center gap-2">
+                    <h4 class="fw-bold mb-0" th:text="${request.requestCode}"></h4>
+                    <span th:replace="~{fragments/badges :: statusBadge(${request.status})}"></span>
+                    <span th:replace="~{fragments/badges :: priorityBadge(${request.priority})}"></span>
+                    <span th:if="${request.overdue}" class="badge text-bg-danger">Quá hạn</span>
+                </div>
+                <div class="text-muted" th:text="${request.title}"></div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a th:href="@{/maintenance/{id}/edit(id=${request.id})}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-pencil me-1"></i>Sửa
+                </a>
+                <form th:if="${request.status.name() == 'COMPLETED'}" th:action="@{/maintenance/{id}/close(id=${request.id})}" method="post">
+                    <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-lock me-1"></i>Đóng yêu cầu</button>
+                </form>
+                <form th:if="${request.status.open}" th:action="@{/maintenance/{id}/cancel(id=${request.id})}" method="post" data-confirm="Hủy yêu cầu này?">
+                    <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-x-circle me-1"></i>Hủy yêu cầu</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
+
+        <div class="row g-3">
+            <div class="col-lg-8">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Thông tin yêu cầu</h6>
+                    <table class="table table-borderless mb-0">
+                        <tr><th style="width:180px;">Bất động sản</th><td><a th:href="@{/properties/{id}(id=${request.property.id})}" th:text="${request.property.name}"></a></td></tr>
+                        <tr><th>Vị trí</th><td th:text="${request.location}"></td></tr>
+                        <tr><th>Hạng mục</th><td th:text="${request.category.name}"></td></tr>
+                        <tr><th>Mô tả</th><td th:text="${request.description}"></td></tr>
+                        <tr><th>Ngày phát hiện</th><td th:text="${#temporals.format(request.reportedDate,'dd/MM/yyyy')}"></td></tr>
+                        <tr><th>Ngày dự kiến hoàn thành</th><td th:text="${request.expectedCompletionDate != null ? #temporals.format(request.expectedCompletionDate,'dd/MM/yyyy') : '-'}"></td></tr>
+                        <tr><th>Ngày hoàn thành thực tế</th><td th:text="${request.actualCompletionDate != null ? #temporals.format(request.actualCompletionDate,'dd/MM/yyyy') : '-'}"></td></tr>
+                        <tr><th>Chi phí dự kiến</th><td th:text="${#numbers.formatDecimal(request.estimatedCost,0,'COMMA',0,'POINT')} + 'đ'"></td></tr>
+                        <tr><th>Người báo cáo</th><td th:text="${request.reportedBy}"></td></tr>
+                        <tr><th>Ghi chú</th><td th:text="${request.notes}"></td></tr>
+                    </table>
+                </div>
+
+                <div class="card-section" id="quotations">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0">Báo giá</h6>
+                        <a th:if="${request.status.open}" th:href="@{/maintenance/{id}/quotations/create(id=${request.id})}"
+                           class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-lg me-1"></i>Thêm báo giá</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                            <tr><th>Mã</th><th>Nhà thầu</th><th>Vật tư</th><th>Nhân công</th><th>Khác</th><th>Tổng</th><th>Số ngày</th><th>Trạng thái</th><th></th></tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="q : ${quotations}">
+                                <td th:text="${q.quotationCode}"></td>
+                                <td th:text="${q.contractor.companyName}"></td>
+                                <td th:text="${#numbers.formatDecimal(q.materialCost,0,'COMMA',0,'POINT')}"></td>
+                                <td th:text="${#numbers.formatDecimal(q.laborCost,0,'COMMA',0,'POINT')}"></td>
+                                <td th:text="${#numbers.formatDecimal(q.otherCost,0,'COMMA',0,'POINT')}"></td>
+                                <td class="fw-bold" th:text="${#numbers.formatDecimal(q.totalAmount,0,'COMMA',0,'POINT')}"></td>
+                                <td th:text="${q.estimatedDays}"></td>
+                                <td>
+                                    <span th:if="${q.status.name() == 'PENDING'}" class="badge text-bg-warning">Chờ duyệt</span>
+                                    <span th:if="${q.status.name() == 'APPROVED'}" class="badge text-bg-success">Đã duyệt</span>
+                                    <span th:if="${q.status.name() == 'REJECTED'}" class="badge text-bg-danger">Từ chối</span>
+                                </td>
+                                <td class="text-end">
+                                    <form th:if="${q.status.name() == 'PENDING'}" th:action="@{/maintenance/{rid}/quotations/{id}/approve(rid=${request.id},id=${q.id})}"
+                                          method="post" class="d-inline" data-confirm="Duyệt báo giá này? Các báo giá khác sẽ tự động bị từ chối.">
+                                        <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></button>
+                                    </form>
+                                    <form th:if="${q.status.name() == 'PENDING'}" th:action="@{/maintenance/{rid}/quotations/{id}/reject(rid=${request.id},id=${q.id})}"
+                                          method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg"></i></button>
+                                    </form>
+                                    <a th:if="${q.status.name() == 'PENDING'}" th:href="@{/maintenance/{rid}/quotations/{id}/edit(rid=${request.id},id=${q.id})}"
+                                       class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(quotations)}"><td colspan="9" class="text-center text-muted py-3">Chưa có báo giá</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0">Phiếu công việc</h6>
+                        <a th:if="${request.status.name() == 'QUOTATION_APPROVED'}" th:href="@{/workorders/create(requestId=${request.id})}"
+                           class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-lg me-1"></i>Tạo phiếu công việc</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead><tr><th>Mã</th><th>Nhà thầu</th><th>Bắt đầu</th><th>Dự kiến HT</th><th>Trạng thái</th></tr></thead>
+                            <tbody>
+                            <tr th:each="w : ${workOrders}">
+                                <td><a th:href="@{/workorders/{id}(id=${w.id})}" th:text="${w.workOrderCode}"></a></td>
+                                <td th:text="${w.contractor.companyName}"></td>
+                                <td th:text="${#temporals.format(w.startDate,'dd/MM/yyyy')}"></td>
+                                <td th:text="${#temporals.format(w.expectedCompletionDate,'dd/MM/yyyy')}"></td>
+                                <td><span th:replace="~{fragments/badges :: statusBadge(${w.status})}"></span></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(workOrders)}"><td colspan="5" class="text-center text-muted py-3">Chưa có phiếu công việc</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Lịch sử xử lý</h6>
+                    <ul class="timeline">
+                        <li th:each="log : ${timeline}">
+                            <div class="small text-muted" th:text="${#temporals.format(log.createdAt,'dd/MM/yyyy HH:mm')}"></div>
+                            <div th:text="${log.description}"></div>
+                            <div class="small text-muted" th:text="'bởi ' + ${log.username}"></div>
+                        </li>
+                        <li th:if="${#lists.isEmpty(timeline)}" class="text-muted">Chưa có lịch sử</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

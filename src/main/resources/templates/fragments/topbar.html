@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<header th:fragment="topbar" class="topbar">
+    <button class="btn btn-sm btn-light d-md-none" type="button" id="sidebarToggle">
+        <i class="bi bi-list"></i>
+    </button>
+    <div class="topbar-title" th:text="${pageTitle} ?: 'CNJ49 - Quản lý bảo trì bất động sản'">CNJ49</div>
+    <div class="topbar-user dropdown">
+        <a href="#" class="dropdown-toggle text-decoration-none text-dark d-flex align-items-center gap-2"
+           data-bs-toggle="dropdown">
+            <i class="bi bi-person-circle fs-4"></i>
+            <span sec:authentication="name">user</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><span class="dropdown-item-text text-muted small" sec:authentication="principal.authorities">role</span></li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="dropdown-item">
+                        <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</header>
+</body>
+</html>

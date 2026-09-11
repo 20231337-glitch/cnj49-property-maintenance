@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title=${quotationForm.id} != null ? 'Sửa báo giá' : 'Thêm báo giá')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3" th:text="${quotationForm.id} != null ? 'Sửa báo giá' : 'Thêm báo giá'"></h4>
+
+        <div class="card-section" style="max-width: 700px;">
+            <form th:action="${quotationForm.id} != null
+                    ? @{/maintenance/{rid}/quotations/{id}(rid=${requestId},id=${quotationForm.id})}
+                    : @{/maintenance/{rid}/quotations(rid=${requestId})}"
+                  th:object="${quotationForm}" method="post" id="quotationFormEl">
+                <input type="hidden" th:field="*{maintenanceRequestId}">
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Nhà thầu</label>
+                    <select class="form-select" th:field="*{contractorId}"
+                            th:classappend="${#fields.hasErrors('contractorId')} ? 'is-invalid'">
+                        <option value="">-- Chọn nhà thầu --</option>
+                        <option th:each="c : ${contractors}" th:value="${c.id}" th:text="${c.companyName}"></option>
+                    </select>
+                    <div class="invalid-feedback" th:errors="*{contractorId}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Ngày báo giá</label>
+                    <input type="date" class="form-control" th:field="*{quotationDate}">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label form-required">Chi phí vật tư (đ)</label>
+                        <input type="number" step="1000" min="0" class="form-control cost-input" th:field="*{materialCost}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label form-required">Chi phí nhân công (đ)</label>
+                        <input type="number" step="1000" min="0" class="form-control cost-input" th:field="*{laborCost}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label form-required">Chi phí khác (đ)</label>
+                        <input type="number" step="1000" min="0" class="form-control cost-input" th:field="*{otherCost}">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Tổng tiền (tự động tính)</label>
+                    <input type="text" class="form-control" id="totalPreview" disabled value="0">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Số ngày thực hiện</label>
+                    <input type="number" min="1" class="form-control" th:field="*{estimatedDays}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Mô tả</label>
+                    <textarea class="form-control" rows="3" th:field="*{description}"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a th:href="@{/maintenance/{id}(id=${requestId})}" class="btn btn-outline-secondary">Hủy</a>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+<script>
+    function recalcTotal() {
+        var inputs = document.querySelectorAll('.cost-input');
+        var total = 0;
+        inputs.forEach(function (i) { total += Number(i.value) || 0; });
+        document.getElementById('totalPreview').value = total.toLocaleString('vi-VN');
+    }
+    document.querySelectorAll('.cost-input').forEach(function (i) {
+        i.addEventListener('input', recalcTotal);
+    });
+    recalcTotal();
+</script>
+</body>
+</html>

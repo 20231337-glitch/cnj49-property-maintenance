@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title=${expenseId} != null ? 'Sửa chi phí' : 'Ghi nhận chi phí')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3" th:text="${expenseId} != null ? 'Sửa chi phí' : 'Ghi nhận chi phí'"></h4>
+
+        <div class="card-section" style="max-width: 700px;">
+            <form th:action="${expenseId} != null ? @{/expenses/{id}(id=${expenseId})} : @{/expenses}"
+                  th:object="${expenseForm}" method="post">
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Bất động sản</label>
+                    <select class="form-select" th:field="*{propertyId}"
+                            th:classappend="${#fields.hasErrors('propertyId')} ? 'is-invalid'">
+                        <option value="">-- Chọn bất động sản --</option>
+                        <option th:each="p : ${properties}" th:value="${p.id}" th:text="${p.name}"></option>
+                    </select>
+                    <div class="invalid-feedback" th:errors="*{propertyId}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nhà thầu (nếu có)</label>
+                    <select class="form-select" th:field="*{contractorId}">
+                        <option value="">-- Không có --</option>
+                        <option th:each="c : ${contractors}" th:value="${c.id}" th:text="${c.companyName}"></option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label form-required">Loại chi phí</label>
+                        <select class="form-select" th:field="*{expenseType}">
+                            <option th:each="t : ${expenseTypes}" th:value="${t}" th:text="${t.label}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label form-required">Số tiền (đ)</label>
+                        <input type="number" step="1000" min="0" class="form-control" th:field="*{amount}"
+                               th:classappend="${#fields.hasErrors('amount')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{amount}"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Ngày chi</label>
+                    <input type="date" class="form-control" th:field="*{expenseDate}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Nội dung chi</label>
+                    <input type="text" class="form-control" th:field="*{description}"
+                           th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{description}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Số chứng từ</label>
+                    <input type="text" class="form-control" th:field="*{referenceNumber}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ghi chú</label>
+                    <textarea class="form-control" rows="2" th:field="*{notes}"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a th:href="@{/expenses}" class="btn btn-outline-secondary">Hủy</a>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

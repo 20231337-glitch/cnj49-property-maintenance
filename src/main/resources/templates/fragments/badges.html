@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<span th:fragment="statusBadge(status)" th:if="${status != null}"
+      th:class="'badge rounded-pill text-bg-' + ${status.badge}"
+      th:text="${status.label}">Status</span>
+
+<span th:fragment="priorityBadge(priority)" th:if="${priority != null}"
+      th:class="'badge rounded-pill text-bg-' + ${priority.badge}"
+      th:text="${priority.label}">Priority</span>
+</body>
+</html>

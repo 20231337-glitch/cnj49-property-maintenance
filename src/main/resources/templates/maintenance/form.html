@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title=${requestForm.id} != null ? 'Sửa yêu cầu bảo trì' : 'Tạo yêu cầu bảo trì')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3" th:text="${requestForm.id} != null ? 'Sửa yêu cầu bảo trì' : 'Tạo yêu cầu bảo trì'"></h4>
+
+        <div class="card-section" style="max-width: 800px;">
+            <form th:action="${requestForm.id} != null ? @{/maintenance/{id}(id=${requestForm.id})} : @{/maintenance}"
+                  th:object="${requestForm}" method="post">
+
+                <div class="mb-3" th:if="${requestForm.id} != null">
+                    <label class="form-label">Mã yêu cầu</label>
+                    <input type="text" class="form-control" th:value="${requestForm.requestCode}" disabled>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label form-required">Bất động sản</label>
+                        <select class="form-select" th:field="*{propertyId}" id="propertySelect"
+                                th:classappend="${#fields.hasErrors('propertyId')} ? 'is-invalid'">
+                            <option value="">-- Chọn bất động sản --</option>
+                            <option th:each="p : ${properties}" th:value="${p.id}" th:text="${p.name}"></option>
+                        </select>
+                        <div class="invalid-feedback" th:errors="*{propertyId}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Vị trí (căn/phòng)</label>
+                        <select class="form-select" th:field="*{unitId}" id="unitSelect">
+                            <option value="">-- Toàn bộ khu / không xác định --</option>
+                            <option th:each="u : ${units}" th:value="${u.id}" th:text="${u.name}"
+                                    th:selected="${u.id == requestForm.unitId}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Hạng mục</label>
+                    <select class="form-select" th:field="*{categoryId}"
+                            th:classappend="${#fields.hasErrors('categoryId')} ? 'is-invalid'">
+                        <option value="">-- Chọn hạng mục --</option>
+                        <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+                    </select>
+                    <div class="invalid-feedback" th:errors="*{categoryId}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Tiêu đề</label>
+                    <input type="text" class="form-control" th:field="*{title}"
+                           th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{title}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Mô tả sự cố</label>
+                    <textarea class="form-control" rows="3" th:field="*{description}"
+                              th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
+                    <div class="invalid-feedback" th:errors="*{description}"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label form-required">Mức độ ưu tiên</label>
+                        <select class="form-select" th:field="*{priority}">
+                            <option th:each="p : ${priorities}" th:value="${p}" th:text="${p.label}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label form-required">Ngày phát hiện</label>
+                        <input type="date" class="form-control" th:field="*{reportedDate}">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Ngày dự kiến hoàn thành</label>
+                        <input type="date" class="form-control" th:field="*{expectedCompletionDate}">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Chi phí dự kiến (đ)</label>
+                        <input type="number" step="1000" min="0" class="form-control" th:field="*{estimatedCost}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Người báo cáo</label>
+                        <input type="text" class="form-control" th:field="*{reportedBy}">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ghi chú</label>
+                    <textarea class="form-control" rows="2" th:field="*{notes}"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a th:href="@{/maintenance}" class="btn btn-outline-secondary">Hủy</a>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+<script>
+    document.getElementById('propertySelect').addEventListener('change', function () {
+        var propertyId = this.value;
+        var unitSelect = document.getElementById('unitSelect');
+        unitSelect.innerHTML = '<option value="">-- Toàn bộ khu / không xác định --</option>';
+        if (!propertyId) { return; }
+        fetch('/units/by-property/' + propertyId)
+            .then(function (res) { return res.json(); })
+            .then(function (units) {
+                units.forEach(function (u) {
+                    var opt = document.createElement('option');
+                    opt.value = u.id;
+                    opt.textContent = u.name;
+                    unitSelect.appendChild(opt);
+                });
+            });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Yêu cầu bảo trì')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">Yêu cầu bảo trì</h4>
+            <a th:href="@{/maintenance/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Tạo yêu cầu</a>
+        </div>
+
+        <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
+
+        <div class="card-section">
+            <form method="get" th:action="@{/maintenance}" class="row g-2 mb-3">
+                <div class="col-md-3">
+                    <input type="text" name="keyword" class="form-control" placeholder="Tìm theo mã, tiêu đề..." th:value="${keyword}">
+                </div>
+                <div class="col-md-2">
+                    <select name="propertyId" class="form-select">
+                        <option value="">-- Bất động sản --</option>
+                        <option th:each="p : ${properties}" th:value="${p.id}" th:text="${p.name}" th:selected="${p.id == propertyId}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="categoryId" class="form-select">
+                        <option value="">-- Hạng mục --</option>
+                        <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id == categoryId}"></option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <select name="priority" class="form-select">
+                        <option value="">-- ƯT --</option>
+                        <option th:each="pr : ${priorities}" th:value="${pr}" th:text="${pr.label}" th:selected="${pr == priority}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="status" class="form-select">
+                        <option value="">-- Trạng thái --</option>
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}" th:selected="${s == status}"></option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <input type="date" name="fromDate" class="form-control" th:value="${fromDate}" title="Từ ngày">
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr><th>Mã</th><th>Tiêu đề</th><th>Bất động sản</th><th>Vị trí</th><th>Hạng mục</th><th>Ưu tiên</th><th>Trạng thái</th><th>Ngày phát hiện</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r : ${requests.content}">
+                        <td><a th:href="@{/maintenance/{id}(id=${r.id})}" th:text="${r.requestCode}"></a></td>
+                        <td th:text="${r.title}"></td>
+                        <td th:text="${r.property.name}"></td>
+                        <td th:text="${r.location}"></td>
+                        <td th:text="${r.category.name}"></td>
+                        <td><span th:replace="~{fragments/badges :: priorityBadge(${r.priority})}"></span></td>
+                        <td><span th:replace="~{fragments/badges :: statusBadge(${r.status})}"></span></td>
+                        <td th:text="${#temporals.format(r.reportedDate,'dd/MM/yyyy')}"></td>
+                    </tr>
+                    <tr th:if="${requests.totalElements == 0}"><td colspan="8" class="text-center text-muted py-4">Không có dữ liệu</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav th:replace="~{fragments/pagination :: pagination(${requests}, @{/maintenance(keyword=${keyword},propertyId=${propertyId},categoryId=${categoryId},priority=${priority},status=${status},fromDate=${fromDate},toDate=${toDate})})}"></nav>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

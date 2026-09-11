@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title=${expense.expenseCode})}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0" th:text="${expense.expenseCode}"></h4>
+            <a th:href="@{/expenses/{id}/edit(id=${expense.id})}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
+        </div>
+
+        <div class="card-section" style="max-width: 700px;">
+            <table class="table table-borderless mb-0">
+                <tr><th style="width:200px;">Bất động sản</th><td><a th:href="@{/properties/{id}(id=${expense.property.id})}" th:text="${expense.property.name}"></a></td></tr>
+                <tr><th>Nhà thầu</th><td th:text="${expense.contractor != null ? expense.contractor.companyName : '-'}"></td></tr>
+                <tr><th>Phiếu công việc</th><td th:text="${expense.workOrder != null ? expense.workOrder.workOrderCode : '-'}"></td></tr>
+                <tr><th>Loại chi phí</th><td><span th:class="'badge text-bg-' + ${expense.expenseType.badge}" th:text="${expense.expenseType.label}"></span></td></tr>
+                <tr><th>Số tiền</th><td class="fw-bold" th:text="${#numbers.formatDecimal(expense.amount,0,'COMMA',0,'POINT')} + 'đ'"></td></tr>
+                <tr><th>Ngày chi</th><td th:text="${#temporals.format(expense.expenseDate,'dd/MM/yyyy')}"></td></tr>
+                <tr><th>Nội dung</th><td th:text="${expense.description}"></td></tr>
+                <tr><th>Số chứng từ</th><td th:text="${expense.referenceNumber}"></td></tr>
+                <tr><th>Ghi chú</th><td th:text="${expense.notes}"></td></tr>
+            </table>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

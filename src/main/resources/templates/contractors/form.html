@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title=${contractor.id} != null ? 'Sửa nhà thầu' : 'Thêm nhà thầu')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3" th:text="${contractor.id} != null ? 'Sửa nhà thầu' : 'Thêm nhà thầu'"></h4>
+
+        <div class="card-section" style="max-width: 760px;">
+            <form th:action="${contractor.id} != null ? @{/contractors/{id}(id=${contractor.id})} : @{/contractors}"
+                  th:object="${contractor}" method="post">
+
+                <div class="mb-3" th:if="${contractor.id} != null">
+                    <label class="form-label">Mã nhà thầu</label>
+                    <input type="text" class="form-control" th:value="${contractor.contractorCode}" disabled>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Tên công ty</label>
+                    <input type="text" class="form-control" th:field="*{companyName}"
+                           th:classappend="${#fields.hasErrors('companyName')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{companyName}"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Người liên hệ</label>
+                        <input type="text" class="form-control" th:field="*{contactPerson}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label form-required">Số điện thoại</label>
+                        <input type="text" class="form-control" th:field="*{phone}"
+                               th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{phone}"></div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" th:field="*{email}"
+                               th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{email}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Mã số thuế</label>
+                        <input type="text" class="form-control" th:field="*{taxCode}">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" th:field="*{address}">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label form-required">Lĩnh vực</label>
+                        <select class="form-select" th:field="*{specialization}">
+                            <option th:each="s : ${specializations}" th:value="${s}" th:text="${s.label}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label form-required">Đánh giá (0-5)</label>
+                        <input type="number" step="0.1" min="0" max="5" class="form-control" th:field="*{rating}"
+                               th:classappend="${#fields.hasErrors('rating')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{rating}"></div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label form-required">Trạng thái</label>
+                        <select class="form-select" th:field="*{status}">
+                            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ghi chú</label>
+                    <textarea class="form-control" rows="2" th:field="*{notes}"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a th:href="@{/contractors}" class="btn btn-outline-secondary">Hủy</a>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

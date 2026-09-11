@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Tạo phiếu công việc')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3">Tạo phiếu công việc</h4>
+
+        <div class="alert alert-info" style="max-width:700px;">
+            Yêu cầu: <strong th:text="${request.requestCode}"></strong> - <span th:text="${request.title}"></span>
+        </div>
+
+        <div class="card-section" style="max-width: 700px;">
+            <form th:action="@{/workorders}" th:object="${workOrderForm}" method="post">
+                <input type="hidden" th:field="*{maintenanceRequestId}">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label form-required">Ngày bắt đầu</label>
+                        <input type="date" class="form-control" th:field="*{startDate}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label form-required">Ngày dự kiến hoàn thành</label>
+                        <input type="date" class="form-control" th:field="*{expectedCompletionDate}">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Nội dung công việc</label>
+                    <textarea class="form-control" rows="4" th:field="*{workDescription}"
+                              th:classappend="${#fields.hasErrors('workDescription')} ? 'is-invalid'"></textarea>
+                    <div class="invalid-feedback" th:errors="*{workDescription}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Bảo hành đến ngày</label>
+                    <input type="date" class="form-control" th:field="*{warrantyUntil}">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Tạo phiếu công việc</button>
+                <a th:href="@{/maintenance/{id}(id=${request.id})}" class="btn btn-outline-secondary">Hủy</a>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

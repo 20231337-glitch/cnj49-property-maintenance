@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Báo cáo')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3">Báo cáo</h4>
+
+        <div class="card-section">
+            <form method="get" th:action="@{/reports}" class="row g-2">
+                <div class="col-md-2">
+                    <input type="date" name="fromDate" class="form-control" th:value="${fromDate}" title="Từ ngày">
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="toDate" class="form-control" th:value="${toDate}" title="Đến ngày">
+                </div>
+                <div class="col-md-3">
+                    <select name="propertyId" class="form-select">
+                        <option value="">-- Tất cả bất động sản --</option>
+                        <option th:each="p : ${properties}" th:value="${p.id}" th:text="${p.name}" th:selected="${p.id == propertyId}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="contractorId" class="form-select">
+                        <option value="">-- Tất cả nhà thầu --</option>
+                        <option th:each="c : ${contractors}" th:value="${c.id}" th:text="${c.companyName}" th:selected="${c.id == contractorId}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-funnel me-1"></i>Áp dụng</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="stat-card mb-3">
+            <div class="stat-label">Tổng chi phí trong khoảng đã chọn</div>
+            <div class="stat-value" th:text="${#numbers.formatDecimal(totalExpense,0,'COMMA',0,'POINT')} + 'đ'"></div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Báo cáo 1: Chi phí vận hành theo tháng</h6>
+                    <canvas id="chart1" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Báo cáo 2: Chi phí từng bất động sản</h6>
+                    <canvas id="chart2" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Báo cáo 3: Chi phí theo loại</h6>
+                    <canvas id="chart3" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Báo cáo 4: Số lượng sự cố theo hạng mục</h6>
+                    <canvas id="chart4" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Báo cáo 6: Yêu cầu bảo trì theo trạng thái</h6>
+                    <canvas id="chart6" height="220"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <h6 class="fw-bold mb-3">Báo cáo 5: Nhà thầu theo tổng giá trị công việc</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>#</th><th>Nhà thầu</th><th>Số lần thực hiện</th><th>Tổng giá trị</th></tr></thead>
+                    <tbody>
+                    <tr th:each="row, iter : ${topContractors}">
+                        <td th:text="${iter.count}"></td>
+                        <td th:text="${row[0]}"></td>
+                        <td th:text="${row[2]}"></td>
+                        <td th:text="${#numbers.formatDecimal(row[1],0,'COMMA',0,'POINT')} + 'đ'"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(topContractors)}"><td colspan="4" class="text-center text-muted py-3">Không có dữ liệu</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <h6 class="fw-bold mb-3">Báo cáo 7: Yêu cầu bảo trì quá hạn</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Mã</th><th>Tiêu đề</th><th>Bất động sản</th><th>Ưu tiên</th><th>Trạng thái</th><th>Hạn hoàn thành</th></tr></thead>
+                    <tbody>
+                    <tr th:each="r : ${overdueRequests}">
+                        <td><a th:href="@{/maintenance/{id}(id=${r.id})}" th:text="${r.requestCode}"></a></td>
+                        <td th:text="${r.title}"></td>
+                        <td th:text="${r.property.name}"></td>
+                        <td><span th:replace="~{fragments/badges :: priorityBadge(${r.priority})}"></span></td>
+                        <td><span th:replace="~{fragments/badges :: statusBadge(${r.status})}"></span></td>
+                        <td class="text-danger fw-bold" th:text="${#temporals.format(r.expectedCompletionDate,'dd/MM/yyyy')}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(overdueRequests)}"><td colspan="6" class="text-center text-muted py-3">Không có yêu cầu quá hạn</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+<script th:inline="javascript">
+    function bar(id, labels, values, color) {
+        new Chart(document.getElementById(id), {
+            type: 'bar',
+            data: { labels: labels, datasets: [{ data: values, backgroundColor: color }] },
+            options: { plugins: { legend: { display: false } } }
+        });
+    }
+    bar('chart1', /*[[${expenseByMonth.labels}]]*/ [], /*[[${expenseByMonth.values}]]*/ [], '#0d6efd');
+    bar('chart2', /*[[${expenseByProperty.labels}]]*/ [], /*[[${expenseByProperty.values}]]*/ [], '#198754');
+    bar('chart3', /*[[${expenseByType.labels}]]*/ [], /*[[${expenseByType.values}]]*/ [], '#fd7e14');
+    bar('chart4', /*[[${requestsByCategory.labels}]]*/ [], /*[[${requestsByCategory.values}]]*/ [], '#6610f2');
+    bar('chart6', /*[[${requestsByStatus.labels}]]*/ [], /*[[${requestsByStatus.values}]]*/ [], '#d63384');
+</script>
+</body>
+</html>

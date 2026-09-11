@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head(title='Dashboard')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3">Tổng quan hệ thống</h4>
+
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon bg-primary"><i class="bi bi-building"></i></div>
+                    <div>
+                        <div class="stat-value" th:text="${stats.totalProperties}">0</div>
+                        <div class="stat-label">Bất động sản</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon bg-info"><i class="bi bi-door-open"></i></div>
+                    <div>
+                        <div class="stat-value" th:text="${stats.totalUnits}">0</div>
+                        <div class="stat-label">Căn / phòng</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon bg-warning"><i class="bi bi-exclamation-circle"></i></div>
+                    <div>
+                        <div class="stat-value" th:text="${stats.openRequests}">0</div>
+                        <div class="stat-label">Yêu cầu đang mở</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon bg-danger"><i class="bi bi-lightning-charge"></i></div>
+                    <div>
+                        <div class="stat-value" th:text="${stats.urgentRequests}">0</div>
+                        <div class="stat-label">Sự cố khẩn cấp</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon bg-secondary"><i class="bi bi-tools"></i></div>
+                    <div>
+                        <div class="stat-value" th:text="${stats.activeWorkOrders}">0</div>
+                        <div class="stat-label">Công việc đang thực hiện</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+                <div class="stat-card d-flex align-items-center gap-3">
+                    <div class="stat-icon bg-success"><i class="bi bi-cash-stack"></i></div>
+                    <div>
+                        <div class="stat-value" style="font-size:1.15rem;"
+                             th:text="${#numbers.formatDecimal(stats.currentMonthExpense, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</div>
+                        <div class="stat-label">Chi phí tháng này</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Chi phí theo tháng</h6>
+                    <canvas id="chartExpenseMonth" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Yêu cầu bảo trì theo trạng thái</h6>
+                    <canvas id="chartRequestStatus" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Chi phí theo bất động sản</h6>
+                    <canvas id="chartExpenseProperty" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Số sự cố theo hạng mục</h6>
+                    <canvas id="chartRequestCategory" height="220"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <h6 class="fw-bold mb-3">Yêu cầu bảo trì gần đây</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tiêu đề</th>
+                        <th>Bất động sản</th>
+                        <th>Ưu tiên</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày phát hiện</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r : ${recentRequests}">
+                        <td><a th:href="@{/maintenance/{id}(id=${r.id})}" th:text="${r.requestCode}">MR-0001</a></td>
+                        <td th:text="${r.title}">Tiêu đề</td>
+                        <td th:text="${r.property.name}">BĐS</td>
+                        <td><span th:replace="~{fragments/badges :: priorityBadge(${r.priority})}"></span></td>
+                        <td><span th:replace="~{fragments/badges :: statusBadge(${r.status})}"></span></td>
+                        <td th:text="${#temporals.format(r.reportedDate, 'dd/MM/yyyy')}">01/01/2026</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(recentRequests)}">
+                        <td colspan="6" class="text-center text-muted py-3">Chưa có yêu cầu bảo trì nào</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+<script th:inline="javascript">
+    const expenseMonthLabels = /*[[${expensesByMonth.labels}]]*/ [];
+    const expenseMonthValues = /*[[${expensesByMonth.values}]]*/ [];
+    const requestStatusLabels = /*[[${requestsByStatus.labels}]]*/ [];
+    const requestStatusValues = /*[[${requestsByStatus.values}]]*/ [];
+    const expensePropertyLabels = /*[[${expensesByProperty.labels}]]*/ [];
+    const expensePropertyValues = /*[[${expensesByProperty.values}]]*/ [];
+    const requestCategoryLabels = /*[[${requestsByCategory.labels}]]*/ [];
+    const requestCategoryValues = /*[[${requestsByCategory.values}]]*/ [];
+
+    new Chart(document.getElementById('chartExpenseMonth'), {
+        type: 'line',
+        data: {
+            labels: expenseMonthLabels,
+            datasets: [{ label: 'Chi phí', data: expenseMonthValues, borderColor: '#0d6efd', backgroundColor: 'rgba(13,110,253,0.15)', fill: true, tension: 0.3 }]
+        },
+        options: { plugins: { legend: { display: false } } }
+    });
+
+    new Chart(document.getElementById('chartRequestStatus'), {
+        type: 'doughnut',
+        data: {
+            labels: requestStatusLabels,
+            datasets: [{ data: requestStatusValues, backgroundColor: ['#6c757d','#0dcaf0','#ffc107','#0d6efd','#0d6efd','#fd7e14','#198754','#212529','#dc3545'] }]
+        }
+    });
+
+    new Chart(document.getElementById('chartExpenseProperty'), {
+        type: 'bar',
+        data: {
+            labels: expensePropertyLabels,
+            datasets: [{ label: 'Chi phí', data: expensePropertyValues, backgroundColor: '#198754' }]
+        },
+        options: { plugins: { legend: { display: false } } }
+    });
+
+    new Chart(document.getElementById('chartRequestCategory'), {
+        type: 'pie',
+        data: {
+            labels: requestCategoryLabels,
+            datasets: [{ data: requestCategoryValues, backgroundColor: ['#0d6efd','#6610f2','#6f42c1','#d63384','#dc3545','#fd7e14','#ffc107','#198754','#20c997','#0dcaf0'] }]
+        }
+    });
+</script>
+</body>
+</html>

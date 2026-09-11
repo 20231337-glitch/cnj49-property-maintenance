@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Phiếu công việc')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3">Phiếu công việc</h4>
+
+        <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
+
+        <div class="card-section">
+            <form method="get" th:action="@{/workorders}" class="row g-2 mb-3">
+                <div class="col-md-4">
+                    <input type="text" name="keyword" class="form-control" placeholder="Tìm theo mã, nội dung..." th:value="${keyword}">
+                </div>
+                <div class="col-md-3">
+                    <select name="contractorId" class="form-select">
+                        <option value="">-- Nhà thầu --</option>
+                        <option th:each="c : ${contractors}" th:value="${c.id}" th:text="${c.companyName}" th:selected="${c.id == contractorId}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">-- Trạng thái --</option>
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}" th:selected="${s == status}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search"></i> Lọc</button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr><th>Mã</th><th>Yêu cầu</th><th>Nhà thầu</th><th>Bắt đầu</th><th>Dự kiến HT</th><th>Trạng thái</th><th>Tiến độ</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="w : ${workOrders.content}">
+                        <td><a th:href="@{/workorders/{id}(id=${w.id})}" th:text="${w.workOrderCode}"></a></td>
+                        <td><a th:href="@{/maintenance/{id}(id=${w.maintenanceRequest.id})}" th:text="${w.maintenanceRequest.requestCode}"></a></td>
+                        <td th:text="${w.contractor.companyName}"></td>
+                        <td th:text="${#temporals.format(w.startDate,'dd/MM/yyyy')}"></td>
+                        <td th:text="${#temporals.format(w.expectedCompletionDate,'dd/MM/yyyy')}">
+                            <span th:if="${w.late}" class="badge text-bg-danger ms-1">Trễ</span>
+                        </td>
+                        <td><span th:replace="~{fragments/badges :: statusBadge(${w.status})}"></span></td>
+                        <td style="width:120px;">
+                            <div class="progress progress-thin">
+                                <div class="progress-bar" th:style="'width:' + ${w.progressPercent} + '%'"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr th:if="${workOrders.totalElements == 0}"><td colspan="7" class="text-center text-muted py-4">Không có dữ liệu</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav th:replace="~{fragments/pagination :: pagination(${workOrders}, @{/workorders(keyword=${keyword},contractorId=${contractorId},status=${status})})}"></nav>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

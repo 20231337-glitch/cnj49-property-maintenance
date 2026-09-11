@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title=${property.name})}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="fw-bold mb-0" th:text="${property.name}">Tên BĐS</h4>
+                <div class="text-muted small" th:text="${property.code}">PROP-0001</div>
+            </div>
+            <div>
+                <a th:href="@{/units/create(propertyId=${property.id})}" class="btn btn-outline-primary"><i class="bi bi-plus-lg me-1"></i>Thêm căn/phòng</a>
+                <a th:href="@{/properties/{id}/edit(id=${property.id})}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-8">
+                <div class="card-section">
+                    <h6 class="fw-bold mb-3">Thông tin bất động sản</h6>
+                    <table class="table table-borderless mb-0">
+                        <tr><th style="width:180px;">Loại</th><td th:text="${property.propertyType.label}"></td></tr>
+                        <tr><th>Địa chỉ</th><td th:text="${property.address}"></td></tr>
+                        <tr><th>Số tầng</th><td th:text="${property.numberOfFloors}"></td></tr>
+                        <tr><th>Số căn/phòng</th><td th:text="${property.numberOfUnits}"></td></tr>
+                        <tr><th>Diện tích</th><td th:text="${property.area} + ' m²'"></td></tr>
+                        <tr><th>Ngày vận hành</th><td th:text="${property.operationDate != null ? #temporals.format(property.operationDate,'dd/MM/yyyy') : '-'}"></td></tr>
+                        <tr><th>Trạng thái</th><td><span th:replace="~{fragments/badges :: statusBadge(${property.status})}"></span></td></tr>
+                        <tr><th>Mô tả</th><td th:text="${property.description}"></td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card mb-3">
+                    <div class="stat-label">Tổng chi phí phát sinh</div>
+                    <div class="stat-value" th:text="${#numbers.formatDecimal(totalExpense,0,'COMMA',0,'POINT')} + 'đ'">0đ</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Số yêu cầu bảo trì</div>
+                    <div class="stat-value" th:text="${#lists.size(requests)}">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <h6 class="fw-bold mb-3">Danh sách căn / phòng</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Mã</th><th>Tên</th><th>Tầng</th><th>Loại</th><th>Trạng thái</th></tr></thead>
+                    <tbody>
+                    <tr th:each="u : ${units}">
+                        <td th:text="${u.code}"></td>
+                        <td><a th:href="@{/units/{id}(id=${u.id})}" th:text="${u.name}"></a></td>
+                        <td th:text="${u.floorNumber}"></td>
+                        <td th:text="${u.unitType.label}"></td>
+                        <td><span th:replace="~{fragments/badges :: statusBadge(${u.status})}"></span></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(units)}"><td colspan="5" class="text-center text-muted py-3">Chưa có căn/phòng</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <h6 class="fw-bold mb-3">Yêu cầu bảo trì</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Mã</th><th>Tiêu đề</th><th>Vị trí</th><th>Ưu tiên</th><th>Trạng thái</th><th>Ngày</th></tr></thead>
+                    <tbody>
+                    <tr th:each="r : ${requests}">
+                        <td><a th:href="@{/maintenance/{id}(id=${r.id})}" th:text="${r.requestCode}"></a></td>
+                        <td th:text="${r.title}"></td>
+                        <td th:text="${r.location}"></td>
+                        <td><span th:replace="~{fragments/badges :: priorityBadge(${r.priority})}"></span></td>
+                        <td><span th:replace="~{fragments/badges :: statusBadge(${r.status})}"></span></td>
+                        <td th:text="${#temporals.format(r.reportedDate,'dd/MM/yyyy')}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(requests)}"><td colspan="6" class="text-center text-muted py-3">Chưa có yêu cầu bảo trì</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

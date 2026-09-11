@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Nhà thầu')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">Nhà thầu</h4>
+            <a th:href="@{/contractors/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Thêm mới</a>
+        </div>
+
+        <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
+
+        <div class="card-section">
+            <form method="get" th:action="@{/contractors}" class="row g-2 mb-3">
+                <div class="col-md-4">
+                    <input type="text" name="keyword" class="form-control" placeholder="Tìm theo tên, mã, SĐT..." th:value="${keyword}">
+                </div>
+                <div class="col-md-3">
+                    <select name="specialization" class="form-select">
+                        <option value="">-- Lĩnh vực --</option>
+                        <option th:each="s : ${specializations}" th:value="${s}" th:text="${s.label}" th:selected="${s == specialization}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">-- Trạng thái --</option>
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}" th:selected="${s == status}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search"></i> Lọc</button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr><th>Mã</th><th>Tên công ty</th><th>Liên hệ</th><th>SĐT</th><th>Lĩnh vực</th><th>Đánh giá</th><th>Trạng thái</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${contractors.content}">
+                        <td th:text="${c.contractorCode}"></td>
+                        <td><a th:href="@{/contractors/{id}(id=${c.id})}" th:text="${c.companyName}"></a></td>
+                        <td th:text="${c.contactPerson}"></td>
+                        <td th:text="${c.phone}"></td>
+                        <td th:text="${c.specialization.label}"></td>
+                        <td><i class="bi bi-star-fill text-warning"></i> <span th:text="${c.rating}"></span></td>
+                        <td><span th:replace="~{fragments/badges :: statusBadge(${c.status})}"></span></td>
+                        <td class="text-end">
+                            <a th:href="@{/contractors/{id}/edit(id=${c.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                            <form th:action="@{/contractors/{id}/delete(id=${c.id})}" method="post" class="d-inline" data-confirm="Xóa nhà thầu này?">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${contractors.totalElements == 0}"><td colspan="8" class="text-center text-muted py-4">Không có dữ liệu</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav th:replace="~{fragments/pagination :: pagination(${contractors}, @{/contractors(keyword=${keyword},specialization=${specialization},status=${status})})}"></nav>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

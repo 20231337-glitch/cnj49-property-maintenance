@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Nghiệm thu công việc')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3">Nghiệm thu công việc</h4>
+
+        <div class="alert alert-info" style="max-width: 700px;">
+            Phiếu công việc: <strong th:text="${workOrder.workOrderCode}"></strong><br>
+            Nội dung: <span th:text="${workOrder.workDescription}"></span><br>
+            Báo giá: <span th:text="${#numbers.formatDecimal(workOrder.quotation.totalAmount,0,'COMMA',0,'POINT')} + 'đ'"></span>
+        </div>
+
+        <div class="card-section" style="max-width: 700px;">
+            <form th:action="@{/inspections}" th:object="${inspectionForm}" method="post">
+                <input type="hidden" th:field="*{workOrderId}">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label form-required">Ngày nghiệm thu</label>
+                        <input type="date" class="form-control" th:field="*{inspectionDate}">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label form-required">Người nghiệm thu</label>
+                        <input type="text" class="form-control" th:field="*{inspectorName}"
+                               th:classappend="${#fields.hasErrors('inspectorName')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{inspectorName}"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Kết quả nghiệm thu</label>
+                    <div class="d-flex gap-4">
+                        <div class="form-check" th:each="r : ${results}">
+                            <input class="form-check-input" type="radio" th:field="*{result}" th:value="${r}">
+                            <label class="form-check-label" th:text="${r.label}"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label form-required">Chi phí thực tế (đ)</label>
+                    <input type="number" step="1000" min="0" class="form-control" th:field="*{actualCost}"
+                           th:classappend="${#fields.hasErrors('actualCost')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{actualCost}"></div>
+                    <div class="form-text">Nếu kết quả ĐẠT, hệ thống sẽ tự động ghi nhận số tiền này vào chi phí vận hành.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ghi chú</label>
+                    <textarea class="form-control" rows="3" th:field="*{notes}"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Xác nhận nghiệm thu</button>
+                <a th:href="@{/workorders/{id}(id=${workOrder.id})}" class="btn btn-outline-secondary">Hủy</a>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

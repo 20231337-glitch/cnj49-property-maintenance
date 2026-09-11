@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Nghiệm thu')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3">Nghiệm thu</h4>
+
+        <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
+
+        <div class="card-section">
+            <h6 class="fw-bold mb-3">Công việc chờ nghiệm thu</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Mã</th><th>Yêu cầu</th><th>Nhà thầu</th><th>Hoàn thành</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="w : ${awaitingWorkOrders}">
+                        <td th:text="${w.workOrderCode}"></td>
+                        <td th:text="${w.maintenanceRequest.requestCode}"></td>
+                        <td th:text="${w.contractor.companyName}"></td>
+                        <td th:text="${#temporals.format(w.actualCompletionDate,'dd/MM/yyyy')}"></td>
+                        <td class="text-end">
+                            <a th:href="@{/inspections/create(workOrderId=${w.id})}" class="btn btn-sm btn-success">
+                                <i class="bi bi-patch-check me-1"></i>Nghiệm thu
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(awaitingWorkOrders)}"><td colspan="5" class="text-center text-muted py-3">Không có công việc chờ nghiệm thu</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <h6 class="fw-bold mb-3">Lịch sử nghiệm thu</h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Phiếu CV</th><th>Ngày nghiệm thu</th><th>Người nghiệm thu</th><th>Kết quả</th><th>Chi phí thực tế</th></tr></thead>
+                    <tbody>
+                    <tr th:each="i : ${inspections.content}">
+                        <td><a th:href="@{/workorders/{id}(id=${i.workOrder.id})}" th:text="${i.workOrder.workOrderCode}"></a></td>
+                        <td th:text="${#temporals.format(i.inspectionDate,'dd/MM/yyyy')}"></td>
+                        <td th:text="${i.inspectorName}"></td>
+                        <td>
+                            <span th:if="${i.result.name() == 'PASSED'}" class="badge text-bg-success">Đạt</span>
+                            <span th:if="${i.result.name() == 'FAILED'}" class="badge text-bg-danger">Không đạt</span>
+                        </td>
+                        <td th:text="${#numbers.formatDecimal(i.actualCost,0,'COMMA',0,'POINT')} + 'đ'"></td>
+                    </tr>
+                    <tr th:if="${inspections.totalElements == 0}"><td colspan="5" class="text-center text-muted py-3">Chưa có dữ liệu nghiệm thu</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <nav th:replace="~{fragments/pagination :: pagination(${inspections}, @{/inspections})}"></nav>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

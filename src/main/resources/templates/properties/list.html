@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Bất động sản')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">Bất động sản</h4>
+            <a th:href="@{/properties/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Thêm mới</a>
+        </div>
+
+        <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
+
+        <div class="card-section">
+            <form method="get" th:action="@{/properties}" class="row g-2 mb-3">
+                <div class="col-md-4">
+                    <input type="text" name="keyword" class="form-control" placeholder="Tìm theo tên, mã, địa chỉ..." th:value="${keyword}">
+                </div>
+                <div class="col-md-3">
+                    <select name="propertyType" class="form-select">
+                        <option value="">-- Loại BĐS --</option>
+                        <option th:each="t : ${propertyTypes}" th:value="${t}" th:text="${t.label}" th:selected="${t == propertyType}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">-- Trạng thái --</option>
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}" th:selected="${s == status}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search"></i> Lọc</button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>Loại</th>
+                        <th>Địa chỉ</th>
+                        <th>Số tầng</th>
+                        <th>Số căn/phòng</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${properties.content}">
+                        <td th:text="${p.code}">PROP-0001</td>
+                        <td><a th:href="@{/properties/{id}(id=${p.id})}" th:text="${p.name}">Tên BĐS</a></td>
+                        <td th:text="${p.propertyType.label}">Loại</td>
+                        <td th:text="${p.address}">Địa chỉ</td>
+                        <td th:text="${p.numberOfFloors}">0</td>
+                        <td th:text="${p.numberOfUnits}">0</td>
+                        <td><span th:replace="~{fragments/badges :: statusBadge(${p.status})}"></span></td>
+                        <td class="text-end">
+                            <a th:href="@{/properties/{id}/edit(id=${p.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                            <form th:action="@{/properties/{id}/delete(id=${p.id})}" method="post" class="d-inline" data-confirm="Xóa bất động sản này?">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${properties.totalElements == 0}">
+                        <td colspan="8" class="text-center text-muted py-4">Không có dữ liệu</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav th:replace="~{fragments/pagination :: pagination(${properties}, @{/properties(keyword=${keyword},propertyType=${propertyType},status=${status})})}"></nav>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

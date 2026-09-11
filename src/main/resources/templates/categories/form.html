@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title=${category.id} != null ? 'Sửa hạng mục' : 'Thêm hạng mục')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <h4 class="fw-bold mb-3" th:text="${category.id} != null ? 'Sửa hạng mục' : 'Thêm hạng mục'"></h4>
+        <div class="card-section" style="max-width: 600px;">
+            <form th:action="${category.id} != null ? @{/categories/{id}(id=${category.id})} : @{/categories}"
+                  th:object="${category}" method="post">
+                <div class="mb-3">
+                    <label class="form-label form-required">Tên hạng mục</label>
+                    <input type="text" class="form-control" th:field="*{name}"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{name}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mô tả</label>
+                    <textarea class="form-control" rows="3" th:field="*{description}"></textarea>
+                </div>
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" th:field="*{active}">
+                    <label class="form-check-label">Đang sử dụng</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a th:href="@{/categories}" class="btn btn-outline-secondary">Hủy</a>
+            </form>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

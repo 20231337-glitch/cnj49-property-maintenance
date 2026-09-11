@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title=${unit.name})}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="fw-bold mb-0" th:text="${unit.name}"></h4>
+                <div class="text-muted small" th:text="${unit.code}"></div>
+            </div>
+            <a th:href="@{/units/{id}/edit(id=${unit.id})}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
+        </div>
+
+        <div class="card-section" style="max-width: 700px;">
+            <table class="table table-borderless mb-0">
+                <tr><th style="width:180px;">Bất động sản</th><td><a th:href="@{/properties/{id}(id=${unit.property.id})}" th:text="${unit.property.name}"></a></td></tr>
+                <tr><th>Tầng</th><td th:text="${unit.floorNumber}"></td></tr>
+                <tr><th>Loại</th><td th:text="${unit.unitType.label}"></td></tr>
+                <tr><th>Diện tích</th><td th:text="${unit.area} + ' m²'"></td></tr>
+                <tr><th>Trạng thái</th><td><span th:replace="~{fragments/badges :: statusBadge(${unit.status})}"></span></td></tr>
+                <tr><th>Mô tả</th><td th:text="${unit.description}"></td></tr>
+            </table>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

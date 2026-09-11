@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Chi phí vận hành')}"></head>
+<body>
+<div th:replace="~{fragments/topbar :: topbar}"></div>
+<div class="app-shell">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+    <main class="content">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold mb-0">Chi phí vận hành</h4>
+            <a th:href="@{/expenses/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Ghi nhận chi phí</a>
+        </div>
+
+        <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-3">
+                <div class="stat-card"><div class="stat-label">Tổng chi phí</div>
+                    <div class="stat-value" style="font-size:1.2rem;" th:text="${#numbers.formatDecimal(summary.total,0,'COMMA',0,'POINT')} + 'đ'"></div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card"><div class="stat-label">Chi phí bảo trì</div>
+                    <div class="stat-value" style="font-size:1.2rem;" th:text="${#numbers.formatDecimal(summary.maintenance,0,'COMMA',0,'POINT')} + 'đ'"></div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card"><div class="stat-label">Chi phí nhân công</div>
+                    <div class="stat-value" style="font-size:1.2rem;" th:text="${#numbers.formatDecimal(summary.labor,0,'COMMA',0,'POINT')} + 'đ'"></div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card"><div class="stat-label">Chi phí vật tư</div>
+                    <div class="stat-value" style="font-size:1.2rem;" th:text="${#numbers.formatDecimal(summary.material,0,'COMMA',0,'POINT')} + 'đ'"></div></div>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <form method="get" th:action="@{/expenses}" class="row g-2 mb-3">
+                <div class="col-md-3">
+                    <input type="text" name="keyword" class="form-control" placeholder="Tìm theo nội dung, mã..." th:value="${keyword}">
+                </div>
+                <div class="col-md-2">
+                    <select name="propertyId" class="form-select">
+                        <option value="">-- Bất động sản --</option>
+                        <option th:each="p : ${properties}" th:value="${p.id}" th:text="${p.name}" th:selected="${p.id == propertyId}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="contractorId" class="form-select">
+                        <option value="">-- Nhà thầu --</option>
+                        <option th:each="c : ${contractors}" th:value="${c.id}" th:text="${c.companyName}" th:selected="${c.id == contractorId}"></option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select name="expenseType" class="form-select">
+                        <option value="">-- Loại chi phí --</option>
+                        <option th:each="t : ${expenseTypes}" th:value="${t}" th:text="${t.label}" th:selected="${t == expenseType}"></option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <input type="date" name="fromDate" class="form-control" th:value="${fromDate}" title="Từ ngày">
+                </div>
+                <div class="col-md-1">
+                    <input type="date" name="toDate" class="form-control" th:value="${toDate}" title="Đến ngày">
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search"></i></button>
+                </div>
+            </form>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Mã</th><th>Bất động sản</th><th>Loại</th><th>Số tiền</th><th>Ngày</th><th>Nội dung</th><th></th></tr></thead>
+                    <tbody>
+                    <tr th:each="e : ${expenses.content}">
+                        <td><a th:href="@{/expenses/{id}(id=${e.id})}" th:text="${e.expenseCode}"></a></td>
+                        <td th:text="${e.property.name}"></td>
+                        <td><span th:class="'badge text-bg-' + ${e.expenseType.badge}" th:text="${e.expenseType.label}"></span></td>
+                        <td th:text="${#numbers.formatDecimal(e.amount,0,'COMMA',0,'POINT')} + 'đ'"></td>
+                        <td th:text="${#temporals.format(e.expenseDate,'dd/MM/yyyy')}"></td>
+                        <td th:text="${e.description}"></td>
+                        <td class="text-end">
+                            <a th:href="@{/expenses/{id}/edit(id=${e.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                            <form th:action="@{/expenses/{id}/delete(id=${e.id})}" method="post" class="d-inline" data-confirm="Xóa chi phí này?">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${expenses.totalElements == 0}"><td colspan="7" class="text-center text-muted py-4">Không có dữ liệu</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav th:replace="~{fragments/pagination :: pagination(${expenses}, @{/expenses(keyword=${keyword},propertyId=${propertyId},contractorId=${contractorId},expenseType=${expenseType},fromDate=${fromDate},toDate=${toDate})})}"></nav>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>
