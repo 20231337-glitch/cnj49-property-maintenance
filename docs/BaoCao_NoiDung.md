@@ -16,10 +16,10 @@
 
 | TT | Mã sinh viên | Sinh viên thực hiện | Lớp hành chính |
 |---|---|---|---|
-| 1 | 20231337 | Trịnh Hoàng Thành | *(điền lớp)* |
-| 2 | 20231645 | Bùi Huy Hùng | *(điền lớp)* |
-| 3 | 20231621 | Trần Quốc Đạt | *(điền lớp)* |
-| 4 | 20231904 | Lê Văn Duy | *(điền lớp)* |
+| 1 | 20231337 | Trịnh Hoàng Thành (Trưởng nhóm) | *(điền lớp hành chính)* |
+| 2 | 20231645 | Bùi Huy Hùng | *(điền lớp hành chính)* |
+| 3 | 20231621 | Trần Quốc Đạt | *(điền lớp hành chính)* |
+| 4 | 20231904 | Lê Văn Duy | *(điền lớp hành chính)* |
 
 - Bắc Ninh – 2026
 
