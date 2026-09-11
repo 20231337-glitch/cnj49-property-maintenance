@@ -10,7 +10,7 @@
 
 - Chủ đề 1: **CNJ49**
 - Đề tài 2: **Xây dựng ứng dụng web quản lý bảo trì, nhà thầu và chi phí vận hành bất động sản cho thuê**
-- LỚP TÍN CHỈ: *(điền theo lớp thực tế của nhóm)*
+- LỚP TÍN CHỈ: Công nghệ Java-1-1-26(N06)
 - Giảng viên hướng dẫn: ThS. Trần Nguyên Hoàng
 - Danh sách sinh viên thực hiện – Nhóm …:
 
