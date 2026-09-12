@@ -21,6 +21,15 @@
 | 3 | 20231621 | Trần Quốc Đạt | *(điền lớp hành chính)* |
 | 4 | 20231904 | Lê Văn Duy | *(điền lớp hành chính)* |
 
+Số điện thoại (dùng cho form báo cáo tiến độ):
+
+| Thành viên | Số điện thoại |
+|---|---|
+| Trịnh Hoàng Thành | 0355636882 |
+| Bùi Huy Hùng | *(điền SĐT)* |
+| Trần Quốc Đạt | *(điền SĐT)* |
+| Lê Văn Duy | *(điền SĐT)* |
+
 - Bắc Ninh – 2026
 
 ---
