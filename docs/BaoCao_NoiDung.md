@@ -12,7 +12,7 @@
 - Đề tài 2: **Xây dựng ứng dụng web quản lý bảo trì, nhà thầu và chi phí vận hành bất động sản cho thuê**
 - LỚP TÍN CHỈ: Công nghệ Java-1-1-26(N06)
 - Giảng viên hướng dẫn: ThS. Trần Nguyên Hoàng
-- Danh sách sinh viên thực hiện – Nhóm …:
+- Danh sách sinh viên thực hiện – Nhóm 24:
 
 | TT | Mã sinh viên | Sinh viên thực hiện | Lớp hành chính |
 |---|---|---|---|
@@ -85,7 +85,7 @@ chương theo đúng mục lục.
   Tuần 2-3 xây dựng entity/repository/service theo business rule; Tuần 4 xây controller + giao diện
   Thymeleaf; Tuần 5 viết unit test, hoàn thiện dashboard/báo cáo; Tuần 6 kiểm thử tổng thể, viết
   báo cáo. *(nhóm điều chỉnh lại theo tiến độ thực tế)*.
-- **Thành viên nhóm** (Nhóm …, GVHD ThS. Trần Nguyên Hoàng):
+- **Thành viên nhóm** (Nhóm 24, GVHD ThS. Trần Nguyên Hoàng):
   - Trịnh Hoàng Thành – 20231337 – Trưởng nhóm
   - Bùi Huy Hùng – 20231645 – Thành viên
   - Trần Quốc Đạt – 20231621 – Thành viên
@@ -192,7 +192,7 @@ chèn ảnh vào đây.)*
 
 ### 2.3. Thiết kế giao diện
 
-33 giao diện Thymeleaf, tổ chức theo module trong `src/main/resources/templates/`: auth, dashboard,
+36 template Thymeleaf (30 trang + 6 fragment), tổ chức theo module trong `src/main/resources/templates/`: auth, dashboard,
 properties, units, categories, contractors, maintenance, quotations, workorders, inspections,
 expenses, reports, errors, và các fragment dùng chung (`fragments/sidebar.html`,
 `fragments/topbar.html`, `fragments/pagination.html`, `fragments/badges.html`).
@@ -251,7 +251,7 @@ src/main/java/com/cnj49/propertymaintenance/
   controller/   - 11 Spring MVC Controller
   dto/          - Form object và DTO hiển thị
   entity/       - 11 JPA Entity
-  enums/        - 12 enum trạng thái/loại nghiệp vụ
+  enums/        - 14 enum trạng thái/loại nghiệp vụ
   exception/    - Exception tuỳ chỉnh + Global Exception Handler
   repository/   - 11 Spring Data JPA Repository
   service/      - Service interface
@@ -259,7 +259,7 @@ src/main/java/com/cnj49/propertymaintenance/
   util/         - CodeGenerator (sinh mã tự động)
 
 src/main/resources/
-  templates/    - 33 Thymeleaf template theo module
+  templates/    - 36 Thymeleaf template (30 trang + 6 fragment)
   static/       - CSS, JS
   application.properties
 
@@ -286,8 +286,8 @@ Các Form/trang Thymeleaf và quan hệ giữa chúng: trang danh sách (list) �
 → form tạo/sửa (form); ví dụ luồng `maintenance/list.html` → `maintenance/detail.html` (xem timeline,
 thêm báo giá, đổi trạng thái) → `quotations/form.html` (thêm báo giá) → quay lại `detail.html`.
 Các fragment dùng chung (`sidebar`, `topbar`, `pagination`) được `th:replace`/`th:insert` vào mọi
-trang để đảm bảo giao diện nhất quán và phân quyền hiển thị menu theo vai trò đăng nhập
-(`sec:authorize` của thymeleaf-extras-springsecurity6).
+trang để đảm bảo giao diện nhất quán; thanh trên cùng hiển thị tên và vai trò của tài khoản đang
+đăng nhập (`sec:authentication` của thymeleaf-extras-springsecurity6).
 
 ### 3.2. Tầng nghiệp vụ (Service layer)
 
@@ -321,7 +321,7 @@ một lần khi CSDL rỗng) cũng thuộc tầng này.
 Demo từng chức năng (chèn ảnh chụp màn hình thực tế sau khi chạy `mvn spring-boot:run`, đăng nhập
 bằng 1 trong 3 tài khoản demo admin/manager/staff):
 
-1. Đăng nhập, phân quyền hiển thị menu theo vai trò.
+1. Đăng nhập, hiển thị tài khoản và vai trò đang đăng nhập.
 2. CRUD Bất động sản/Căn phòng/Hạng mục bảo trì với tìm kiếm, lọc, phân trang.
 3. Tạo yêu cầu bảo trì, theo dõi timeline xử lý.
 4. Thêm nhiều báo giá, so sánh, duyệt một báo giá.
@@ -354,7 +354,7 @@ kết quả kiểm thử tự động — toàn bộ 13 test case đều đạt,
 - Xây dựng hoàn chỉnh ứng dụng web quản lý bảo trì – nhà thầu – chi phí vận hành BĐS cho thuê theo
   đúng 15 chức năng và 15 business rule đã đề ra, workflow đầy đủ từ phát hiện sự cố đến đóng yêu
   cầu và ghi nhận chi phí.
-- 11 entity, 11 repository, 12 service + 12 service impl, 11 controller, 33 giao diện Thymeleaf.
+- 11 entity, 11 repository, 12 service + 12 service impl, 11 controller, 36 template Thymeleaf.
 - 13/13 unit/integration test PASS (JUnit 5 + H2), đảm bảo các business rule cốt lõi hoạt động
   đúng.
 - Dashboard thống kê thời gian thực + 7 báo cáo có bộ lọc phục vụ ra quyết định quản lý.
