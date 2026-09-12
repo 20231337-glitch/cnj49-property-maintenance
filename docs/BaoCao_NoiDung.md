@@ -26,9 +26,9 @@ Số điện thoại (dùng cho form báo cáo tiến độ):
 | Thành viên | Số điện thoại |
 |---|---|
 | Trịnh Hoàng Thành | 0355636882 |
-| Bùi Huy Hùng | *(điền SĐT)* |
-| Trần Quốc Đạt | *(điền SĐT)* |
-| Lê Văn Duy | *(điền SĐT)* |
+| Bùi Huy Hùng | 0355636882 *(tạm dùng SĐT trưởng nhóm, chưa có SĐT riêng)* |
+| Trần Quốc Đạt | 0355636882 *(tạm dùng SĐT trưởng nhóm, chưa có SĐT riêng)* |
+| Lê Văn Duy | 0355636882 *(tạm dùng SĐT trưởng nhóm, chưa có SĐT riêng)* |
 
 - Bắc Ninh – 2026
 
