@@ -79,6 +79,8 @@ public class PropertyServiceImpl implements PropertyService {
         existing.setNumberOfUnits(input.getNumberOfUnits());
         existing.setArea(input.getArea());
         existing.setOperationDate(input.getOperationDate());
+        existing.setBasePrice(input.getBasePrice());
+        existing.setAnnualIncreaseRate(input.getAnnualIncreaseRate());
         existing.setStatus(input.getStatus());
         existing.setDescription(input.getDescription());
         return propertyRepository.save(existing);

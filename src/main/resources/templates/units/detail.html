@@ -11,7 +11,7 @@
                 <h4 class="fw-bold mb-0" th:text="${unit.name}"></h4>
                 <div class="text-muted small" th:text="${unit.code}"></div>
             </div>
-            <a th:href="@{/units/{id}/edit(id=${unit.id})}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
+            <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/units/{id}/edit(id=${unit.id})}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
         </div>
 
         <div class="card-section" style="max-width: 700px;">

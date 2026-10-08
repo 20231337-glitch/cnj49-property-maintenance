@@ -30,9 +30,9 @@
                       th:action="@{/workorders/{id}/complete(id=${workOrder.id})}" method="post">
                     <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check-lg me-1"></i>Hoàn thành</button>
                 </form>
-                <a th:if="${workOrder.status.name() == 'COMPLETED'}" th:href="@{/inspections/create(workOrderId=${workOrder.id})}"
+                <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:if="${workOrder.status.name() == 'COMPLETED'}" th:href="@{/inspections/create(workOrderId=${workOrder.id})}"
                    class="btn btn-success btn-sm"><i class="bi bi-patch-check me-1"></i>Nghiệm thu</a>
-                <form th:if="${workOrder.status.active}" th:action="@{/workorders/{id}/cancel(id=${workOrder.id})}" method="post" data-confirm="Hủy phiếu công việc này?">
+                <form sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:if="${workOrder.status.active}" th:action="@{/workorders/{id}/cancel(id=${workOrder.id})}" method="post" data-confirm="Hủy phiếu công việc này?">
                     <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-x-circle me-1"></i>Hủy</button>
                 </form>
             </div>

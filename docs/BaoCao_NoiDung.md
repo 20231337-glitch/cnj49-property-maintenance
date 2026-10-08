@@ -18,8 +18,8 @@
 |---|---|---|---|
 | 1 | 20231337 | Trịnh Hoàng Thành (Trưởng nhóm) | *(điền lớp hành chính)* |
 | 2 | 20231645 | Bùi Huy Hùng | *(điền lớp hành chính)* |
-| 3 | 20231621 | Trần Quốc Đạt | *(điền lớp hành chính)* |
-| 4 | 20231904 | Lê Văn Duy | *(điền lớp hành chính)* |
+| 3 | 20231904 | Trần Quốc Đạt | *(điền lớp hành chính)* |
+| 4 | 20231621 | Lê Văn Duy | *(điền lớp hành chính)* |
 
 Số điện thoại (dùng cho form báo cáo tiến độ):
 
@@ -88,8 +88,8 @@ chương theo đúng mục lục.
 - **Thành viên nhóm** (Nhóm 24, GVHD ThS. Trần Nguyên Hoàng):
   - Trịnh Hoàng Thành – 20231337 – Trưởng nhóm
   - Bùi Huy Hùng – 20231645 – Thành viên
-  - Trần Quốc Đạt – 20231621 – Thành viên
-  - Lê Văn Duy – 20231904 – Thành viên
+  - Trần Quốc Đạt – 20231904 – Thành viên
+  - Lê Văn Duy – 20231621 – Thành viên
 - **Phân công công việc**: *(nhóm tự điền theo thực tế phân công của từng người — mục CV
   thành viên trong form báo cáo cần khớp với phần này, ví dụ: Thành – kiến trúc hệ thống, module
   MaintenanceRequest/WorkOrder, security; Hùng – module Property/Unit/Contractor; Đạt – module
@@ -142,7 +142,7 @@ Tác nhân (actor) và chức năng chính (chi tiết đầy đủ tại `docs/
 căn/phòng; CRUD hạng mục bảo trì; tạo/cập nhật/huỷ/đóng yêu cầu bảo trì; thêm và so sánh báo giá
 nhà thầu; duyệt/từ chối báo giá; tạo phiếu công việc từ báo giá đã duyệt; bắt đầu/tạm dừng/tiếp
 tục/hoàn thành/huỷ phiếu công việc; nghiệm thu PASSED/FAILED; ghi nhận chi phí vận hành (thủ công
-hoặc tự động khi nghiệm thu đạt); dashboard thống kê; 7 báo cáo có bộ lọc.
+hoặc tự động khi nghiệm thu đạt); dashboard thống kê; 8 báo cáo có bộ lọc.
 
 **Kịch bản chính (use case trung tâm) – Xử lý yêu cầu bảo trì từ đầu đến cuối:**
 
@@ -293,7 +293,7 @@ trang để đảm bảo giao diện nhất quán; thanh trên cùng hiển th�
 
 Các class xử lý nghiệp vụ chính, thống kê, báo cáo: `MaintenanceRequestServiceImpl`,
 `QuotationServiceImpl`, `WorkOrderServiceImpl`, `InspectionServiceImpl`, `ExpenseServiceImpl`,
-`DashboardServiceImpl` (6 thẻ số liệu + 4 biểu đồ), `ReportServiceImpl` (7 báo cáo có bộ lọc theo
+`DashboardServiceImpl` (6 thẻ số liệu + 4 biểu đồ), `ReportServiceImpl` (8 báo cáo có bộ lọc theo
 ngày/BĐS/nhà thầu), `AuditLogServiceImpl` (ghi nhật ký thao tác cho timeline).
 
 **Code đặc trưng** – ví dụ business rule BR02/BR03 (chỉ 1 báo giá được duyệt, các báo giá còn lại
@@ -328,7 +328,7 @@ bằng 1 trong 3 tài khoản demo admin/manager/staff):
 5. Tạo phiếu công việc, cập nhật tiến độ thi công.
 6. Nghiệm thu PASSED/FAILED, tự động ghi nhận chi phí khi đạt.
 7. Dashboard 6 thẻ số liệu + 4 biểu đồ Chart.js (dữ liệu thật từ DB).
-8. 7 báo cáo có bộ lọc theo ngày/bất động sản/nhà thầu.
+8. 8 báo cáo có bộ lọc theo ngày/bất động sản/nhà thầu.
 
 ### 3.5. Kiểm thử (đổi tiêu đề mục để không trùng số 3.5 với mục trên)
 
@@ -357,7 +357,7 @@ kết quả kiểm thử tự động — toàn bộ 13 test case đều đạt,
 - 11 entity, 11 repository, 12 service + 12 service impl, 11 controller, 36 template Thymeleaf.
 - 13/13 unit/integration test PASS (JUnit 5 + H2), đảm bảo các business rule cốt lõi hoạt động
   đúng.
-- Dashboard thống kê thời gian thực + 7 báo cáo có bộ lọc phục vụ ra quyết định quản lý.
+- Dashboard thống kê thời gian thực + 8 báo cáo có bộ lọc phục vụ ra quyết định quản lý.
 - Đăng nhập, seed dữ liệu demo tự động, mã nguồn quản lý bằng Git/GitHub.
 
 ### Hạn chế và hướng phát triển của đề tài

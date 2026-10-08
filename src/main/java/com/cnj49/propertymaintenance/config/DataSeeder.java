@@ -127,11 +127,12 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private List<Property> seedProperties() {
+        // Cot cuoi: gia tri co ban (VND) va ty le tang gia/nam (%) - dung cho Bao cao 8 (du bao 5 nam).
         Object[][] data = {
-                {"Chung cư Mini Cầu Giấy", PropertyType.MINI_APARTMENT, "Số 12 Cầu Giấy, Hà Nội", 5, 20, "80"},
-                {"Nhà trọ Mỹ Đình", PropertyType.BOARDING_HOUSE, "Ngõ 55 Mỹ Đình, Hà Nội", 3, 15, "45"},
-                {"Căn hộ cho thuê Hà Đông", PropertyType.RENTAL_HOUSE, "Đường Quang Trung, Hà Đông, Hà Nội", 4, 12, "60"},
-                {"Chung cư Botanica Cầu Giấy", PropertyType.APARTMENT_BUILDING, "Số 89 Dịch Vọng, Cầu Giấy, Hà Nội", 18, 120, "500"}
+                {"Chung cư Mini Cầu Giấy", PropertyType.MINI_APARTMENT, "Số 12 Cầu Giấy, Hà Nội", 5, 20, "80", "15000000000", "7.0"},
+                {"Nhà trọ Mỹ Đình", PropertyType.BOARDING_HOUSE, "Ngõ 55 Mỹ Đình, Hà Nội", 3, 15, "45", "8000000000", "6.0"},
+                {"Căn hộ cho thuê Hà Đông", PropertyType.RENTAL_HOUSE, "Đường Quang Trung, Hà Đông, Hà Nội", 4, 12, "60", "10000000000", "5.5"},
+                {"Chung cư Botanica Cầu Giấy", PropertyType.APARTMENT_BUILDING, "Số 89 Dịch Vọng, Cầu Giấy, Hà Nội", 18, 120, "500", "45000000000", "8.0"}
         };
         List<Property> saved = new ArrayList<>();
         for (Object[] row : data) {
@@ -143,6 +144,8 @@ public class DataSeeder implements CommandLineRunner {
             p.setNumberOfFloors((Integer) row[3]);
             p.setNumberOfUnits((Integer) row[4]);
             p.setArea(new BigDecimal((String) row[5]));
+            p.setBasePrice(new BigDecimal((String) row[6]));
+            p.setAnnualIncreaseRate(new BigDecimal((String) row[7]));
             p.setOperationDate(LocalDate.now().minusYears(1 + saved.size()));
             p.setStatus(PropertyStatus.ACTIVE);
             p.setDescription("Bất động sản cho thuê tại " + row[0]);

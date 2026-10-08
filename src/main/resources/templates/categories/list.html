@@ -8,7 +8,7 @@
     <main class="content">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0">Hạng mục bảo trì</h4>
-            <a th:href="@{/categories/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Thêm mới</a>
+            <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/categories/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Thêm mới</a>
         </div>
 
         <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
@@ -26,8 +26,8 @@
                             <span th:unless="${c.active}" class="badge text-bg-secondary">Ngừng sử dụng</span>
                         </td>
                         <td class="text-end">
-                            <a th:href="@{/categories/{id}/edit(id=${c.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
-                            <form th:action="@{/categories/{id}/delete(id=${c.id})}" method="post" class="d-inline" data-confirm="Xóa hạng mục này?">
+                            <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/categories/{id}/edit(id=${c.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                            <form sec:authorize="hasRole('ADMIN')" th:action="@{/categories/{id}/delete(id=${c.id})}" method="post" class="d-inline" data-confirm="Xóa hạng mục này?">
                                 <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                             </form>
                         </td>

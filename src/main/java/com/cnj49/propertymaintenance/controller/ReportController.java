@@ -61,6 +61,9 @@ public class ReportController {
         model.addAttribute("requestsByStatus", reportService.requestsByStatus(effectiveFrom, effectiveTo));
         // Bao cao 7
         model.addAttribute("overdueRequests", reportService.overdueRequests());
+        // Bao cao 8
+        model.addAttribute("propertyPriceProjection", reportService.propertyPriceProjection());
+        model.addAttribute("portfolioValueByYear", reportService.portfolioValueByYear());
 
         return "reports/index";
     }

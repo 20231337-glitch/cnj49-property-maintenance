@@ -208,13 +208,15 @@ CREATE TABLE `properties`(
     `address` VARCHAR(255) NOT NULL,
     `property_type` ENUM('APARTMENT_BUILDING', 'BOARDING_HOUSE', 'MINI_APARTMENT', 'OFFICE', 'OTHER', 'RENTAL_HOUSE') NOT NULL,
     `status` ENUM('ACTIVE', 'INACTIVE', 'UNDER_MAINTENANCE') NOT NULL,
+    `base_price` DECIMAL(15, 2),
+    `annual_increase_rate` DECIMAL(5, 2),
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 INSERT INTO `properties` VALUES
-(80.00, 5, 20, '2025-09-12', '2026-09-12 04:39:20.169943', 1, '2026-09-12 04:39:20.169943', 'PROP-0001', 'Chung cư Mini Cầu Giấy', 'Bất động sản cho thuê tại Chung cư Mini Cầu Giấy', 'Số 12 Cầu Giấy, Hà Nội', 'MINI_APARTMENT', 'ACTIVE'),
-(45.00, 3, 15, '2024-09-12', '2026-09-12 04:39:20.210939', 2, '2026-09-12 04:39:20.210939', 'PROP-0002', 'Nhà trọ Mỹ Đình', 'Bất động sản cho thuê tại Nhà trọ Mỹ Đình', 'Ngõ 55 Mỹ Đình, Hà Nội', 'BOARDING_HOUSE', 'ACTIVE'),
-(60.00, 4, 12, '2023-09-12', '2026-09-12 04:39:20.218933', 3, '2026-09-12 04:39:20.218933', 'PROP-0003', 'Căn hộ cho thuê Hà Đông', 'Bất động sản cho thuê tại Căn hộ cho thuê Hà Đông', 'Đường Quang Trung, Hà Đông, Hà Nội', 'RENTAL_HOUSE', 'ACTIVE'),
-(500.00, 18, 120, '2022-09-12', '2026-09-12 04:39:20.234936', 4, '2026-09-12 04:39:20.234936', 'PROP-0004', 'Chung cư Botanica Cầu Giấy', 'Bất động sản cho thuê tại Chung cư Botanica Cầu Giấy', 'Số 89 Dịch Vọng, Cầu Giấy, Hà Nội', 'APARTMENT_BUILDING', 'ACTIVE');
+(80.00, 5, 20, '2025-09-12', '2026-09-12 04:39:20.169943', 1, '2026-09-12 04:39:20.169943', 'PROP-0001', 'Chung cư Mini Cầu Giấy', 'Bất động sản cho thuê tại Chung cư Mini Cầu Giấy', 'Số 12 Cầu Giấy, Hà Nội', 'MINI_APARTMENT', 'ACTIVE', 15000000000.00, 7.00),
+(45.00, 3, 15, '2024-09-12', '2026-09-12 04:39:20.210939', 2, '2026-09-12 04:39:20.210939', 'PROP-0002', 'Nhà trọ Mỹ Đình', 'Bất động sản cho thuê tại Nhà trọ Mỹ Đình', 'Ngõ 55 Mỹ Đình, Hà Nội', 'BOARDING_HOUSE', 'ACTIVE', 8000000000.00, 6.00),
+(60.00, 4, 12, '2023-09-12', '2026-09-12 04:39:20.218933', 3, '2026-09-12 04:39:20.218933', 'PROP-0003', 'Căn hộ cho thuê Hà Đông', 'Bất động sản cho thuê tại Căn hộ cho thuê Hà Đông', 'Đường Quang Trung, Hà Đông, Hà Nội', 'RENTAL_HOUSE', 'ACTIVE', 10000000000.00, 5.50),
+(500.00, 18, 120, '2022-09-12', '2026-09-12 04:39:20.234936', 4, '2026-09-12 04:39:20.234936', 'PROP-0004', 'Chung cư Botanica Cầu Giấy', 'Bất động sản cho thuê tại Chung cư Botanica Cầu Giấy', 'Số 89 Dịch Vọng, Cầu Giấy, Hà Nội', 'APARTMENT_BUILDING', 'ACTIVE', 45000000000.00, 8.00);
 CREATE TABLE `quotations`(
     `estimated_days` INTEGER NOT NULL,
     `labor_cost` DECIMAL(15, 2) NOT NULL,

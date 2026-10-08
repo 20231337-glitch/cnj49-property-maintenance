@@ -70,6 +70,22 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Giá thuê/giá trị cơ bản (VNĐ)</label>
+                        <input type="number" step="1000" min="0" class="form-control" th:field="*{basePrice}"
+                               th:classappend="${#fields.hasErrors('basePrice')} ? 'is-invalid'"
+                               placeholder="Dùng cho báo cáo dự báo tăng giá 5 năm">
+                        <div class="invalid-feedback" th:errors="*{basePrice}"></div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tỷ lệ tăng giá mỗi năm (%)</label>
+                        <input type="number" step="0.1" min="0" class="form-control" th:field="*{annualIncreaseRate}"
+                               th:classappend="${#fields.hasErrors('annualIncreaseRate')} ? 'is-invalid'">
+                        <div class="invalid-feedback" th:errors="*{annualIncreaseRate}"></div>
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label">Ngày đưa vào vận hành</label>
                     <input type="date" class="form-control" th:field="*{operationDate}">

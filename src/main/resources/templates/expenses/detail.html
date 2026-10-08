@@ -8,7 +8,7 @@
     <main class="content">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0" th:text="${expense.expenseCode}"></h4>
-            <a th:href="@{/expenses/{id}/edit(id=${expense.id})}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
+            <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/expenses/{id}/edit(id=${expense.id})}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
         </div>
 
         <div class="card-section" style="max-width: 700px;">

@@ -91,6 +91,26 @@
         </div>
 
         <div class="card-section">
+            <h6 class="fw-bold mb-3">Báo cáo 8: Dự báo tăng giá bất động sản (5 năm tới)</h6>
+            <p class="text-muted small mb-2">Giá dự kiến năm N = Giá hiện tại × (1 + tỷ lệ tăng/năm)<sup>N</sup>. Chỉ tính các bất động sản đã khai báo giá cơ bản.</p>
+            <div class="mb-3" style="position: relative; height: 300px;"><canvas id="chart8"></canvas></div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead><tr><th>Bất động sản</th><th>Giá hiện tại</th><th>Giá dự kiến sau 5 năm</th><th>Số lần tăng giá</th></tr></thead>
+                    <tbody>
+                    <tr th:each="row : ${propertyPriceProjection}">
+                        <td th:text="${row[0]}"></td>
+                        <td th:text="${#numbers.formatDecimal(row[1],0,'COMMA',0,'POINT')} + 'đ'"></td>
+                        <td th:text="${#numbers.formatDecimal(row[2],0,'COMMA',0,'POINT')} + 'đ'"></td>
+                        <td th:text="${#numbers.formatDecimal(row[3],1,2,'POINT')} + ' lần'"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(propertyPriceProjection)}"><td colspan="4" class="text-center text-muted py-3">Chưa có bất động sản nào khai báo giá cơ bản</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-section">
             <h6 class="fw-bold mb-3">Báo cáo 7: Yêu cầu bảo trì quá hạn</h6>
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
@@ -121,11 +141,19 @@
             options: { plugins: { legend: { display: false } } }
         });
     }
+    function line(id, labels, values, color) {
+        new Chart(document.getElementById(id), {
+            type: 'line',
+            data: { labels: labels, datasets: [{ data: values, borderColor: color, backgroundColor: color, tension: 0.2, fill: false }] },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
     bar('chart1', /*[[${expenseByMonth.labels}]]*/ [], /*[[${expenseByMonth.values}]]*/ [], '#0d6efd');
     bar('chart2', /*[[${expenseByProperty.labels}]]*/ [], /*[[${expenseByProperty.values}]]*/ [], '#198754');
     bar('chart3', /*[[${expenseByType.labels}]]*/ [], /*[[${expenseByType.values}]]*/ [], '#fd7e14');
     bar('chart4', /*[[${requestsByCategory.labels}]]*/ [], /*[[${requestsByCategory.values}]]*/ [], '#6610f2');
     bar('chart6', /*[[${requestsByStatus.labels}]]*/ [], /*[[${requestsByStatus.values}]]*/ [], '#d63384');
+    line('chart8', /*[[${portfolioValueByYear.labels}]]*/ [], /*[[${portfolioValueByYear.values}]]*/ [], '#20c997');
 </script>
 </body>
 </html>

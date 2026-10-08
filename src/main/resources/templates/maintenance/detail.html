@@ -20,10 +20,10 @@
                 <a th:href="@{/maintenance/{id}/edit(id=${request.id})}" class="btn btn-outline-secondary btn-sm">
                     <i class="bi bi-pencil me-1"></i>Sửa
                 </a>
-                <form th:if="${request.status.name() == 'COMPLETED'}" th:action="@{/maintenance/{id}/close(id=${request.id})}" method="post">
+                <form sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:if="${request.status.name() == 'COMPLETED'}" th:action="@{/maintenance/{id}/close(id=${request.id})}" method="post">
                     <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-lock me-1"></i>Đóng yêu cầu</button>
                 </form>
-                <form th:if="${request.status.open}" th:action="@{/maintenance/{id}/cancel(id=${request.id})}" method="post" data-confirm="Hủy yêu cầu này?">
+                <form sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:if="${request.status.open}" th:action="@{/maintenance/{id}/cancel(id=${request.id})}" method="post" data-confirm="Hủy yêu cầu này?">
                     <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-x-circle me-1"></i>Hủy yêu cầu</button>
                 </form>
             </div>
@@ -75,11 +75,11 @@
                                     <span th:if="${q.status.name() == 'REJECTED'}" class="badge text-bg-danger">Từ chối</span>
                                 </td>
                                 <td class="text-end">
-                                    <form th:if="${q.status.name() == 'PENDING'}" th:action="@{/maintenance/{rid}/quotations/{id}/approve(rid=${request.id},id=${q.id})}"
+                                    <form sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:if="${q.status.name() == 'PENDING'}" th:action="@{/maintenance/{rid}/quotations/{id}/approve(rid=${request.id},id=${q.id})}"
                                           method="post" class="d-inline" data-confirm="Duyệt báo giá này? Các báo giá khác sẽ tự động bị từ chối.">
                                         <button type="submit" class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></button>
                                     </form>
-                                    <form th:if="${q.status.name() == 'PENDING'}" th:action="@{/maintenance/{rid}/quotations/{id}/reject(rid=${request.id},id=${q.id})}"
+                                    <form sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:if="${q.status.name() == 'PENDING'}" th:action="@{/maintenance/{rid}/quotations/{id}/reject(rid=${request.id},id=${q.id})}"
                                           method="post" class="d-inline">
                                         <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg"></i></button>
                                     </form>
@@ -96,7 +96,7 @@
                 <div class="card-section">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="fw-bold mb-0">Phiếu công việc</h6>
-                        <a th:if="${request.status.name() == 'QUOTATION_APPROVED'}" th:href="@{/workorders/create(requestId=${request.id})}"
+                        <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:if="${request.status.name() == 'QUOTATION_APPROVED'}" th:href="@{/workorders/create(requestId=${request.id})}"
                            class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-lg me-1"></i>Tạo phiếu công việc</a>
                     </div>
                     <div class="table-responsive">

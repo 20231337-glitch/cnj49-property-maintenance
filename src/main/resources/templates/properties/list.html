@@ -8,7 +8,7 @@
     <main class="content">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0">Bất động sản</h4>
-            <a th:href="@{/properties/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Thêm mới</a>
+            <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/properties/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Thêm mới</a>
         </div>
 
         <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
@@ -59,8 +59,8 @@
                         <td th:text="${p.numberOfUnits}">0</td>
                         <td><span th:replace="~{fragments/badges :: statusBadge(${p.status})}"></span></td>
                         <td class="text-end">
-                            <a th:href="@{/properties/{id}/edit(id=${p.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
-                            <form th:action="@{/properties/{id}/delete(id=${p.id})}" method="post" class="d-inline" data-confirm="Xóa bất động sản này?">
+                            <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/properties/{id}/edit(id=${p.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                            <form sec:authorize="hasRole('ADMIN')" th:action="@{/properties/{id}/delete(id=${p.id})}" method="post" class="d-inline" data-confirm="Xóa bất động sản này?">
                                 <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                             </form>
                         </td>

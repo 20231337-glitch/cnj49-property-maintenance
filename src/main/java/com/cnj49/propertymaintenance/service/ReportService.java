@@ -36,4 +36,13 @@ public interface ReportService {
 
     /** Tong chi phi ung voi bo loc, hien thi tren dau trang bao cao. */
     BigDecimal totalExpense(LocalDate fromDate, LocalDate toDate, Long propertyId);
+
+    /**
+     * Bao cao 8: du bao gia tung bat dong san sau 5 nam theo ty le tang gia/nam.
+     * Chi gom cac property co khai bao basePrice > 0. Moi dong: {ten, gia hien tai, gia du bao nam 5, so lan tang gia}.
+     */
+    List<Object[]> propertyPriceProjection();
+
+    /** Bao cao 8: tong gia tri danh muc (cac property co khai bao gia) qua tung nam, tu hien tai den nam 5. */
+    ChartSeries portfolioValueByYear();
 }

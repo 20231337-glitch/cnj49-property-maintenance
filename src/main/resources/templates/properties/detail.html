@@ -12,8 +12,8 @@
                 <div class="text-muted small" th:text="${property.code}">PROP-0001</div>
             </div>
             <div>
-                <a th:href="@{/units/create(propertyId=${property.id})}" class="btn btn-outline-primary"><i class="bi bi-plus-lg me-1"></i>Thêm căn/phòng</a>
-                <a th:href="@{/properties/{id}/edit(id=${property.id})}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
+                <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/units/create(propertyId=${property.id})}" class="btn btn-outline-primary"><i class="bi bi-plus-lg me-1"></i>Thêm căn/phòng</a>
+                <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/properties/{id}/edit(id=${property.id})}" class="btn btn-primary"><i class="bi bi-pencil me-1"></i>Sửa</a>
             </div>
         </div>
 
@@ -28,6 +28,8 @@
                         <tr><th>Số căn/phòng</th><td th:text="${property.numberOfUnits}"></td></tr>
                         <tr><th>Diện tích</th><td th:text="${property.area} + ' m²'"></td></tr>
                         <tr><th>Ngày vận hành</th><td th:text="${property.operationDate != null ? #temporals.format(property.operationDate,'dd/MM/yyyy') : '-'}"></td></tr>
+                        <tr th:if="${property.basePrice != null}"><th>Giá cơ bản</th><td th:text="${#numbers.formatDecimal(property.basePrice,0,'COMMA',0,'POINT')} + 'đ'"></td></tr>
+                        <tr th:if="${property.annualIncreaseRate != null}"><th>Tỷ lệ tăng giá/năm</th><td th:text="${property.annualIncreaseRate} + '%'"></td></tr>
                         <tr><th>Trạng thái</th><td><span th:replace="~{fragments/badges :: statusBadge(${property.status})}"></span></td></tr>
                         <tr><th>Mô tả</th><td th:text="${property.description}"></td></tr>
                     </table>

@@ -52,3 +52,51 @@ Cac test case duoc tu dong hoa trong `src/test/java` (JUnit 5 + H2 in-memory), c
 ## TC10 - Chi phi khong duoc am
 - File: `ExpenseServiceTest.create_negativeAmount_throwsBusinessException`
 - Ky vong: nem `BusinessException` chua "BR07".
+
+## TC14 - Du bao gia 5 nam theo ty le tang gia (Bao cao 8)
+- File: `ReportServiceTest.propertyPriceProjection_appliesAnnualRateCompoundedOverFiveYears`
+- Ky vong: gia 100.000.000, tang 10%/nam -> sau 5 nam 161.051.000, tang 1,61 lan.
+
+## TC15 - Bo qua bat dong san chua khai bao gia
+- File: `ReportServiceTest.propertyPriceProjection_skipsPropertiesWithoutBasePrice`
+- Ky vong: bat dong san khong co `basePrice` khong xuat hien trong bao cao du bao.
+
+## TC16 - Bieu do tong gia tri danh muc 6 moc
+- File: `ReportServiceTest.portfolioValueByYear_returnsSixPoints_currentPlusFiveYears`
+- Ky vong: nhan "Hien tai", "Nam 1" ... "Nam 5".
+
+## TC17 - Trang bao cao hien thi Bao cao 8
+- File: `ReportControllerSmokeTest.reportsPage_rendersPriceProjectionSection`
+- Ky vong: GET `/reports` tra ve HTTP 200, co muc "Du bao tang gia bat dong san".
+
+## TC18 - Form sua bat dong san hien dung ngay van hanh
+- File: `PropertyControllerTest.editForm_rendersOperationDateInIsoFormatForDateInput`
+- Ky vong: o `operationDate` co `value="yyyy-MM-dd"` de trinh duyet hien thi dung ngay.
+
+## TC19 - Sua bat dong san luu dung ngay va gia
+- File: `PropertyControllerTest.update_savesOperationDateAndPriceFieldsFromForm`
+- Ky vong: sau khi luu, `operationDate`, `basePrice`, `annualIncreaseRate` dung voi gia tri nhap.
+
+## TC20 - STAFF bi chan cac thao tac quan ly
+- File: `RoleAuthorizationTest.staff_isDeniedManagementActions` (25 duong dan)
+- Ky vong: duyet/tu choi bao gia, tao/huy phieu, nghiem thu, chi phi, sua danh muc, xoa -> HTTP 403.
+
+## TC21 - STAFF tao va theo doi yeu cau
+- File: `RoleAuthorizationTest.staff_canCreateAndFollowRequests` (14 duong dan)
+- Ky vong: xem du lieu, tao/sua yeu cau, nhap bao gia, cap nhat tien do phieu -> khong bi chan.
+
+## TC22 - MANAGER duyet va quan ly danh muc
+- File: `RoleAuthorizationTest.manager_canApproveInspectAndManageMasterData` (11 duong dan)
+- Ky vong: khong bi chan.
+
+## TC23 - MANAGER khong duoc xoa
+- File: `RoleAuthorizationTest.manager_cannotDelete` (7 duong dan)
+- Ky vong: HTTP 403.
+
+## TC24 - ADMIN duoc xoa
+- File: `RoleAuthorizationTest.admin_canDelete` (4 duong dan)
+- Ky vong: khong bi chan.
+
+## TC25 - Trang 403
+- File: `RoleAuthorizationTest.accessDeniedPage_rendersForbiddenMessage`
+- Ky vong: `/errors/403` hien thong bao "Khong co quyen truy cap".

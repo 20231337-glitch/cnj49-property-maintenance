@@ -6,8 +6,8 @@
 |---|---:|---|
 | Trịnh Hoàng Thành | 20231337 | Trưởng nhóm |
 | Bùi Huy Hùng | 20231645 | Thành viên |
-| Trần Quốc Đạt | 20231621 | Thành viên |
-| Lê Văn Duy | 20231904 | Thành viên |
+| Trần Quốc Đạt | 20231904 | Thành viên |
+| Lê Văn Duy | 20231621 | Thành viên |
 
 ## Mô tả đề tài
 
@@ -34,9 +34,11 @@ nhà thầu → báo giá → phê duyệt → phiếu công việc → sửa ch
 8. Nghiệm thu PASSED/FAILED (BR04, BR12, BR13)
 9. Quản lý chi phí vận hành
 10. Dashboard thống kê với 6 thẻ số liệu + 4 biểu đồ (dữ liệu thật từ DB)
-11. 7 báo cáo có bộ lọc theo ngày/bất động sản/nhà thầu
+11. 8 báo cáo có bộ lọc theo ngày/bất động sản/nhà thầu, bao gồm Báo cáo 8 dự báo tăng giá bất động sản
+    5 năm tới (giá năm N = giá hiện tại × (1 + tỷ lệ tăng/năm)^N)
 12. Lịch sử hoạt động (audit log / timeline)
-13. Đăng nhập, phân quyền 3 vai trò: ADMIN, MANAGER, STAFF
+13. Đăng nhập, phân quyền 3 vai trò: STAFF tạo và theo dõi yêu cầu, MANAGER duyệt và điều phối, chỉ ADMIN
+    được xóa dữ liệu (khai báo tập trung trong `SecurityConfig`)
 
 ## Database
 
@@ -152,5 +154,6 @@ Toàn bộ được triển khai trong lớp Service (không đặt trong Contro
 mvn clean test
 ```
 
-Test bao phủ: tạo yêu cầu bảo trì + validate, duyệt báo giá + chống duyệt trùng, điều kiện tạo
-phiếu công việc + vòng đời start/complete, nghiệm thu PASSED/FAILED, validate chi phí không âm.
+25 test case (81 lượt chạy, 9 lớp test), bao phủ: tạo yêu cầu bảo trì + validate, duyệt báo giá + chống duyệt
+trùng, điều kiện tạo phiếu công việc + vòng đời start/complete, nghiệm thu PASSED/FAILED, validate chi phí không âm,
+dự báo tăng giá 5 năm (Báo cáo 8), form sửa bất động sản giữ đúng ngày vận hành và giá, phân quyền theo vai trò.

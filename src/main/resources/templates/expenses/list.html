@@ -8,7 +8,7 @@
     <main class="content">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="fw-bold mb-0">Chi phí vận hành</h4>
-            <a th:href="@{/expenses/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Ghi nhận chi phí</a>
+            <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/expenses/create}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Ghi nhận chi phí</a>
         </div>
 
         <div class="alert alert-success alert-auto-dismiss alert-dismissible fade show" th:if="${success}" th:text="${success}"></div>
@@ -78,8 +78,8 @@
                         <td th:text="${#temporals.format(e.expenseDate,'dd/MM/yyyy')}"></td>
                         <td th:text="${e.description}"></td>
                         <td class="text-end">
-                            <a th:href="@{/expenses/{id}/edit(id=${e.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
-                            <form th:action="@{/expenses/{id}/delete(id=${e.id})}" method="post" class="d-inline" data-confirm="Xóa chi phí này?">
+                            <a sec:authorize="hasAnyRole('MANAGER','ADMIN')" th:href="@{/expenses/{id}/edit(id=${e.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+                            <form sec:authorize="hasRole('ADMIN')" th:action="@{/expenses/{id}/delete(id=${e.id})}" method="post" class="d-inline" data-confirm="Xóa chi phí này?">
                                 <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                             </form>
                         </td>

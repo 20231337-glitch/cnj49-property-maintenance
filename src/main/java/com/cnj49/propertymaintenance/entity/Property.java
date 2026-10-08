@@ -4,6 +4,7 @@ import com.cnj49.propertymaintenance.enums.PropertyStatus;
 import com.cnj49.propertymaintenance.enums.PropertyType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -57,6 +58,7 @@ public class Property {
     @Column(name = "area", nullable = false, precision = 12, scale = 2)
     private BigDecimal area = BigDecimal.ZERO;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @Column(name = "operation_date")
     private LocalDate operationDate;
 
@@ -68,6 +70,16 @@ public class Property {
     @Size(max = 1000, message = "Mô tả tối đa 1000 ký tự")
     @Column(name = "description", length = 1000)
     private String description;
+
+    /** Gia thue/gia tri co ban hien tai (VND), dung lam goc tinh du bao tang gia. */
+    @DecimalMin(value = "0.0", message = "Giá cơ bản phải lớn hơn hoặc bằng 0")
+    @Column(name = "base_price", precision = 15, scale = 2)
+    private BigDecimal basePrice;
+
+    /** Ty le tang gia moi nam (%), dung cho bao cao du bao 5 nam. */
+    @DecimalMin(value = "0.0", message = "Tỷ lệ tăng giá phải lớn hơn hoặc bằng 0")
+    @Column(name = "annual_increase_rate", precision = 5, scale = 2)
+    private BigDecimal annualIncreaseRate;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -194,6 +206,22 @@ public class Property {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public BigDecimal getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(BigDecimal basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public BigDecimal getAnnualIncreaseRate() {
+        return annualIncreaseRate;
+    }
+
+    public void setAnnualIncreaseRate(BigDecimal annualIncreaseRate) {
+        this.annualIncreaseRate = annualIncreaseRate;
     }
 
     public List<Unit> getUnits() {
